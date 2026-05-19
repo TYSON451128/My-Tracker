@@ -1,46 +1,85 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-<title>My Tracker</title>
+<meta charset="UTF-8">
+<title>Karthik's Tracker</title>
 <style>
-body { background-color: #1a1a2e; color: white; font-family: Arial; padding: 20px; }
-h1 { color: #e94560; }
-h2 { color: #0f9b8e; }
-input { padding: 8px; margin: 5px; width: 200px; }
-button { padding: 8px 15px; background-color: #e94560; color: white; border: none; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background-color: #0f0f1a; color: white; font-family: Arial; min-height: 100vh; padding: 20px; }
+h1 { color: #e94560; font-size: 24px; text-align: center; padding: 20px 0; border-bottom: 2px solid #e94560; margin-bottom: 20px; }
+h2 { color: #0f9b8e; font-size: 16px; margin-bottom: 10px; }
+.card { background-color: #1a1a2e; border-radius: 12px; padding: 18px; margin-bottom: 15px; }
+.income-card { border-left: 4px solid #0f9b8e; }
+.expense-card { border-left: 4px solid #e94560; }
+.balance-card { border-left: 4px solid #f5a623; text-align: center; }
+.input-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+input { background-color: #0f0f1a; color: white; border: 1px solid #333; padding: 10px; border-radius: 8px; flex: 1; font-size: 14px; }
+button { padding: 10px 18px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; }
+.btn-income { background-color: #0f9b8e; color: white; }
+.btn-expense { background-color: #e94560; color: white; }
+.message { font-size: 13px; color: #aaa; margin-top: 10px; }
+.balance-amount { font-size: 32px; font-weight: bold; color: #f5a623; margin-top: 8px; }
+.balance-amount.negative { color: #e94560; }
+.balance-amount.positive { color: #0f9b8e; }
+.label { font-size: 11px; color: #666; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
 </style>
 </head>
 <body>
 <h1>Karthik's Tracker</h1>
+<div class="card income-card">
+<p class="label">Daily Work</p>
 <h2>Work Income</h2>
+<div class="input-row">
 <input type="number" id="hours" placeholder="Hours worked today">
-<input type="number" id="rate" placeholder="Your hourly rate">
-<button onclick="addIncome()">Add Income</button>
-<p id="incomeMessage"></p>
+<button class="btn-income" onclick="addIncome()">+ Add</button>
+</div>
+<p class="message" id="incomeMessage"></p>
+</div>
+<div class="card expense-card">
+<p class="label">Spending</p>
 <h2>Expenses</h2>
-<input type="text" id="expenseName" placeholder="Expense name">
-<input type="number" id="expenseAmount" placeholder="Amount">
-<button onclick="addExpense()">Add Expense</button>
-<p id="expenseMessage"></p>
-<h2>Balance</h2>
-<p id="balance">Total Balance: ₹0</p>
+<div class="input-row">
+<input type="text" id="expenseName" placeholder="What did you spend on?">
+</div>
+<div class="input-row" style="margin-top:8px;">
+<input type="number" id="expenseAmount" placeholder="Amount in Rs">
+<button class="btn-expense" onclick="addExpense()">- Add</button>
+</div>
+<p class="message" id="expenseMessage"></p>
+</div>
+<div class="card balance-card">
+<p class="label">Remaining</p>
+<h2>Total Balance</h2>
+<p class="balance-amount" id="balance">Rs 0</p>
+</div>
 <script>
-let totalBalance = 0;
+let totalBalance = Number(localStorage.getItem("balance")) || 0;
+window.onload = function() { updateBalance(); }
 function addIncome() {
-let hours = document.getElementById("hours").value;
-let rate = document.getElementById("rate").value;
-let earned = hours * rate;
-totalBalance = totalBalance + earned;
-document.getElementById("incomeMessage").innerHTML = "You earned Rs" + earned + " today";
-document.getElementById("balance").innerHTML = "Total Balance: Rs" + totalBalance;
+let hours = Number(document.getElementById("hours").value);
+if(hours <= 0) return;
+let rate = 400/11;
+let earned = Math.round(hours * rate * 100) / 100;
+totalBalance = Math.round((totalBalance + earned) * 100) / 100;
+localStorage.setItem("balance", totalBalance);
+document.getElementById("incomeMessage").innerHTML = "Earned Rs" + earned + " for " + hours + " hours";
+updateBalance();
 }
 function addExpense() {
 let name = document.getElementById("expenseName").value;
-let amount = document.getElementById("expenseAmount").value;
-totalBalance = totalBalance - amount;
-document.getElementById("expenseMessage").innerHTML = "Added: " + name + " Rs" + amount;
-document.getElementById("balance").innerHTML = "Total Balance: Rs" + totalBalance;
+let amount = Number(document.getElementById("expenseAmount").value);
+if(amount <= 0) return;
+totalBalance = Math.round((totalBalance - amount) * 100) / 100;
+localStorage.setItem("balance", totalBalance);
+document.getElementById("expenseMessage").innerHTML = name + ": Rs" + amount + " spent";
+updateBalance();
+}
+function updateBalance() {
+let bal = document.getElementById("balance");
+bal.innerHTML = "Rs " + totalBalance;
+bal.className = "balance-amount";
+if(totalBalance < 0) bal.className = "balance-amount negative";
+else if(totalBalance > 0) bal.className = "balance-amount positive";
 }
 </script>
 </body>
