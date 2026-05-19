@@ -1,0 +1,48 @@
+cat > tracker/index.html << 'EOF'
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Tracker</title>
+<style>
+body { background-color: #1a1a2e; color: white; font-family: Arial; padding: 20px; }
+h1 { color: #e94560; }
+h2 { color: #0f9b8e; }
+input { padding: 8px; margin: 5px; width: 200px; }
+button { padding: 8px 15px; background-color: #e94560; color: white; border: none; }
+</style>
+</head>
+<body>
+<h1>Karthik's Tracker</h1>
+<h2>Work Income</h2>
+<input type="number" id="hours" placeholder="Hours worked today">
+<input type="number" id="rate" placeholder="Your hourly rate">
+<button onclick="addIncome()">Add Income</button>
+<p id="incomeMessage"></p>
+<h2>Expenses</h2>
+<input type="text" id="expenseName" placeholder="Expense name">
+<input type="number" id="expenseAmount" placeholder="Amount">
+<button onclick="addExpense()">Add Expense</button>
+<p id="expenseMessage"></p>
+<h2>Balance</h2>
+<p id="balance">Total Balance: ₹0</p>
+<script>
+let totalBalance = 0;
+function addIncome() {
+let hours = document.getElementById("hours").value;
+let rate = document.getElementById("rate").value;
+let earned = hours * rate;
+totalBalance = totalBalance + earned;
+document.getElementById("incomeMessage").innerHTML = "You earned Rs" + earned + " today";
+document.getElementById("balance").innerHTML = "Total Balance: Rs" + totalBalance;
+}
+function addExpense() {
+let name = document.getElementById("expenseName").value;
+let amount = document.getElementById("expenseAmount").value;
+totalBalance = totalBalance - amount;
+document.getElementById("expenseMessage").innerHTML = "Added: " + name + " Rs" + amount;
+document.getElementById("balance").innerHTML = "Total Balance: Rs" + totalBalance;
+}
+</script>
+</body>
+</html>
+EOF
