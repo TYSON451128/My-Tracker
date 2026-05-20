@@ -95,6 +95,10 @@ button { padding: 10px 15px; border: none; border-radius: 8px; font-size: 14px; 
 
 <div class="card summary-card">
 <h2>Danger Zone</h2>
+<button onclick="exportData()" 
+style="background:#0f9b8e;color:white;margin-bottom:8px;">
+Export Backup
+</button>
 
 <button onclick="resetMonth()" 
 style="background:#9b59b6;color:white;margin-bottom:8px;">
@@ -254,6 +258,16 @@ function resetAll() {
         saveData();
         updateUI();
     }
+}
+
+function exportData() {
+    let json = JSON.stringify(data, null, 2);
+    let blob = new Blob([json], {type: "application/json"});
+    let url = URL.createObjectURL(blob);
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = "tracker-backup.json";
+    a.click();
 }
 
 function updateUI() {
