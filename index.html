@@ -5,82 +5,212 @@
 <title>Karthik's Tracker</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background-color: #0f0f1a; color: white; font-family: Arial; min-height: 100vh; padding: 20px; }
-h1 { color: #e94560; font-size: 24px; text-align: center; padding: 20px 0; border-bottom: 2px solid #e94560; margin-bottom: 20px; }
-h2 { color: #0f9b8e; font-size: 16px; margin-bottom: 10px; }
-.card { background-color: #1a1a2e; border-radius: 12px; padding: 18px; margin-bottom: 15px; }
+body { background-color: #0f0f1a; color: white; font-family: Arial; padding: 20px; }
+h1 { color: #e94560; font-size: 22px; text-align: center; padding: 15px 0; border-bottom: 2px solid #e94560; margin-bottom: 15px; }
+h2 { color: #0f9b8e; font-size: 15px; margin-bottom: 10px; }
+.card { background-color: #1a1a2e; border-radius: 12px; padding: 15px; margin-bottom: 12px; }
 .income-card { border-left: 4px solid #0f9b8e; }
 .expense-card { border-left: 4px solid #e94560; }
 .balance-card { border-left: 4px solid #f5a623; text-align: center; }
-.input-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-input { background-color: #0f0f1a; color: white; border: 1px solid #333; padding: 10px; border-radius: 8px; flex: 1; font-size: 14px; }
-button { padding: 10px 18px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; }
+.summary-card { border-left: 4px solid #9b59b6; }
+.debt-card { border-left: 4px solid #e67e22; }
+input { background-color: #0f0f1a; color: white; border: 1px solid #333; padding: 8px; border-radius: 8px; width: 100%; font-size: 14px; margin-bottom: 8px; }
+button { padding: 10px 15px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; width: 100%; margin-top: 5px; }
 .btn-income { background-color: #0f9b8e; color: white; }
 .btn-expense { background-color: #e94560; color: white; }
-.message { font-size: 13px; color: #aaa; margin-top: 10px; }
-.balance-amount { font-size: 32px; font-weight: bold; color: #f5a623; margin-top: 8px; }
-.balance-amount.negative { color: #e94560; }
-.balance-amount.positive { color: #0f9b8e; }
+.btn-debt { background-color: #e67e22; color: white; }
 .label { font-size: 11px; color: #666; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+.balance-amount { font-size: 28px; font-weight: bold; color: #f5a623; margin-top: 5px; }
+.negative { color: #e94560; }
+.positive { color: #0f9b8e; }
+.history-item { background: rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 6px; margin-top: 6px; font-size: 13px; display: flex; justify-content: space-between; }
+.history-item.expense { border-left: 3px solid #e94560; }
+.history-item.income { border-left: 3px solid #0f9b8e; }
+.history-item.debt { border-left: 3px solid #e67e22; }
+.paid { color: #0f9b8e; font-size: 11px; }
+.unpaid { color: #e94560; font-size: 11px; }
+.summary-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+.summary-value { color: #f5a623; font-weight: bold; }
 </style>
 </head>
 <body>
 <h1>Karthik's Tracker</h1>
-<div class="card income-card">
-<p class="label">Daily Work</p>
-<h2>Work Income</h2>
-<div class="input-row">
-<input type="number" id="hours" placeholder="Hours worked today">
-<button class="btn-income" onclick="addIncome()">+ Add</button>
-</div>
-<p class="message" id="incomeMessage"></p>
-</div>
-<div class="card expense-card">
-<p class="label">Spending</p>
-<h2>Expenses</h2>
-<div class="input-row">
-<input type="text" id="expenseName" placeholder="What did you spend on?">
-</div>
-<div class="input-row" style="margin-top:8px;">
-<input type="number" id="expenseAmount" placeholder="Amount in Rs">
-<button class="btn-expense" onclick="addExpense()">- Add</button>
-</div>
-<p class="message" id="expenseMessage"></p>
-</div>
+
 <div class="card balance-card">
-<p class="label">Remaining</p>
+<p class="label">Current Balance</p>
 <h2>Total Balance</h2>
 <p class="balance-amount" id="balance">Rs 0</p>
 </div>
+
+<div class="card summary-card">
+<p class="label">This Month</p>
+<h2>Monthly Summary</h2>
+<div class="summary-row"><span>Total Earned</span><span class="summary-value" id="monthEarned">Rs 0</span></div>
+<div class="summary-row"><span>Total Spent</span><span class="summary-value" id="monthSpent">Rs 0</span></div>
+<div class="summary-row"><span>Days Worked</span><span class="summary-value" id="daysWorked">0</span></div>
+<div class="summary-row"><span>Total Hours</span><span class="summary-value" id="totalHours">0</span></div>
+</div>
+
+<div class="card income-card">
+<p class="label">Daily Work</p>
+<h2>Add Work Income</h2>
+<input type="time" id="startTime" placeholder="Start time">
+<input type="time" id="endTime" placeholder="End time">
+<button class="btn-income" onclick="addIncome()">+ Add Income</button>
+</div>
+
+<div class="card expense-card">
+<p class="label">Spending</p>
+<h2>Add Expense</h2>
+<input type="text" id="expenseName" placeholder="Expense name">
+<input type="number" id="expenseAmount" placeholder="Amount in Rs">
+<button class="btn-expense" onclick="addExpense()">- Add Expense</button>
+</div>
+
+<div class="card debt-card">
+<p class="label">Debt</p>
+<h2>Add Debt</h2>
+<input type="text" id="debtName" placeholder="Who gave / what for">
+<input type="number" id="debtAmount" placeholder="Amount in Rs">
+<button class="btn-debt" onclick="addDebt()">Add Debt</button>
+</div>
+
+<div class="card income-card">
+<h2>Income History</h2>
+<div id="incomeHistory"></div>
+</div>
+
+<div class="card expense-card">
+<h2>Expense History</h2>
+<div id="expenseHistory"></div>
+</div>
+
+<div class="card debt-card">
+<h2>Debt History</h2>
+<div id="debtHistory"></div>
+</div>
+
 <script>
-let totalBalance = Number(localStorage.getItem("balance")) || 0;
-window.onload = function() { updateBalance(); }
+const RATE = 400/11;
+let data = JSON.parse(localStorage.getItem("trackerData")) || {
+    balance: 0,
+    monthEarned: 0,
+    monthSpent: 0,
+    daysWorked: 0,
+    totalHours: 0,
+    currentMonth: new Date().getMonth(),
+    incomes: [],
+    expenses: [],
+    debts: []
+};
+
+function checkMonthReset() {
+    let currentMonth = new Date().getMonth();
+    if(data.currentMonth !== currentMonth) {
+        data.monthEarned = 0;
+        data.monthSpent = 0;
+        data.daysWorked = 0;
+        data.totalHours = 0;
+        data.currentMonth = currentMonth;
+        data.incomes = [];
+        data.expenses = [];
+        saveData();
+    }
+}
+
+function saveData() {
+    localStorage.setItem("trackerData", JSON.stringify(data));
+}
+
+function calcHours(start, end) {
+    let [sh, sm] = start.split(":").map(Number);
+    let [eh, em] = end.split(":").map(Number);
+    let startMins = sh * 60 + sm;
+    let endMins = eh * 60 + em;
+    if(endMins < startMins) endMins += 24 * 60;
+    return (endMins - startMins) / 60;
+}
+
 function addIncome() {
-let hours = Number(document.getElementById("hours").value);
-if(hours <= 0) return;
-let rate = 400/11;
-let earned = Math.round(hours * rate * 100) / 100;
-totalBalance = Math.round((totalBalance + earned) * 100) / 100;
-localStorage.setItem("balance", totalBalance);
-document.getElementById("incomeMessage").innerHTML = "Earned Rs" + earned + " for " + hours + " hours";
-updateBalance();
+    let start = document.getElementById("startTime").value;
+    let end = document.getElementById("endTime").value;
+    if(!start || !end) return alert("Enter start and end time");
+    let hours = calcHours(start, end);
+    let earned = Math.round(hours * RATE * 100) / 100;
+    let today = new Date().toLocaleDateString();
+    data.balance = Math.round((data.balance + earned) * 100) / 100;
+    data.monthEarned = Math.round((data.monthEarned + earned) * 100) / 100;
+    data.totalHours = Math.round((data.totalHours + hours) * 100) / 100;
+    data.daysWorked += 1;
+    data.incomes.push({ date: today, start, end, hours: Math.round(hours*100)/100, earned });
+    saveData();
+    updateUI();
 }
+
 function addExpense() {
-let name = document.getElementById("expenseName").value;
-let amount = Number(document.getElementById("expenseAmount").value);
-if(amount <= 0) return;
-totalBalance = Math.round((totalBalance - amount) * 100) / 100;
-localStorage.setItem("balance", totalBalance);
-document.getElementById("expenseMessage").innerHTML = name + ": Rs" + amount + " spent";
-updateBalance();
+    let name = document.getElementById("expenseName").value;
+    let amount = Number(document.getElementById("expenseAmount").value);
+    if(!name || amount <= 0) return;
+    let today = new Date().toLocaleDateString();
+    data.balance = Math.round((data.balance - amount) * 100) / 100;
+    data.monthSpent = Math.round((data.monthSpent + amount) * 100) / 100;
+    data.expenses.push({ date: today, name, amount, paid: true });
+    saveData();
+    updateUI();
 }
-function updateBalance() {
-let bal = document.getElementById("balance");
-bal.innerHTML = "Rs " + totalBalance;
-bal.className = "balance-amount";
-if(totalBalance < 0) bal.className = "balance-amount negative";
-else if(totalBalance > 0) bal.className = "balance-amount positive";
+
+function addDebt() {
+    let name = document.getElementById("debtName").value;
+    let amount = Number(document.getElementById("debtAmount").value);
+    if(!name || amount <= 0) return;
+    let today = new Date().toLocaleDateString();
+    data.debts.push({ date: today, name, amount, paid: false });
+    saveData();
+    updateUI();
 }
+
+function toggleDebt(index) {
+    data.debts[index].paid = !data.debts[index].paid;
+    saveData();
+    updateUI();
+}
+
+function updateUI() {
+    let bal = document.getElementById("balance");
+    bal.innerHTML = "Rs " + data.balance;
+    bal.className = "balance-amount " + (data.balance < 0 ? "negative" : "positive");
+    document.getElementById("monthEarned").innerHTML = "Rs " + data.monthEarned;
+    document.getElementById("monthSpent").innerHTML = "Rs " + data.monthSpent;
+    document.getElementById("daysWorked").innerHTML = data.daysWorked;
+    document.getElementById("totalHours").innerHTML = data.totalHours + " hrs";
+
+    let ih = document.getElementById("incomeHistory");
+    ih.innerHTML = data.incomes.slice().reverse().map(i =>
+        `<div class="history-item income">
+            <span>${i.date} ${i.start}-${i.end} (${i.hours}hrs)</span>
+            <span>Rs ${i.earned}</span>
+        </div>`
+    ).join("") || "<p style='color:#666;font-size:13px'>No income yet</p>";
+
+    let eh = document.getElementById("expenseHistory");
+    eh.innerHTML = data.expenses.slice().reverse().map(e =>
+        `<div class="history-item expense">
+            <span>${e.date} - ${e.name}</span>
+            <span>Rs ${e.amount}</span>
+        </div>`
+    ).join("") || "<p style='color:#666;font-size:13px'>No expenses yet</p>";
+
+    let dh = document.getElementById("debtHistory");
+    dh.innerHTML = data.debts.map((d, i) =>
+        `<div class="history-item debt">
+            <span>${d.date} - ${d.name}</span>
+            <span>Rs ${d.amount} <button onclick="toggleDebt(${i})" style="padding:2px 8px;font-size:11px;background:${d.paid?'#0f9b8e':'#e94560'};color:white;border:none;border-radius:4px">${d.paid?'Paid':'Unpaid'}</button></span>
+        </div>`
+    ).join("") || "<p style='color:#666;font-size:13px'>No debts</p>";
+}
+
+checkMonthReset();
+updateUI();
 </script>
 </body>
 </html>
