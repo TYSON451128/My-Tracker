@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
 <title>Karthik's Tracker</title>
 <style>
@@ -31,6 +32,36 @@ button { padding: 10px 15px; border: none; border-radius: 8px; font-size: 14px; 
 .unpaid { color: #e94560; font-size: 11px; }
 .summary-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
 .summary-value { color: #f5a623; font-weight: bold; }
+    meta { name: "viewport"; content: "width=device-width, initial-scale=1.0"; }
+
+@media (max-width: 480px) {
+    body { padding: 10px; }
+    h1 { font-size: 18px; }
+    h2 { font-size: 13px; }
+    .card { padding: 12px; border-radius: 10px; }
+    button { font-size: 13px; padding: 10px; }
+    input { font-size: 13px; padding: 8px; }
+    .history-item { font-size: 11px; flex-direction: column; }
+    .balance-amount { font-size: 22px; }
+    .summary-row { font-size: 12px; }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    body { max-width: 600px; margin: auto; padding: 15px; }
+    .balance-amount { font-size: 26px; }
+}
+
+@media (min-width: 769px) {
+    body { max-width: 800px; margin: auto; padding: 25px; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 18px; }
+    .card { padding: 20px; }
+    .balance-amount { font-size: 36px; }
+    .summary-row { font-size: 16px; }
+    input { font-size: 16px; padding: 12px; }
+    button { font-size: 16px; padding: 12px; }
+    .history-item { font-size: 14px; }
+}
 </style>
 </head>
 <body>
@@ -98,6 +129,10 @@ button { padding: 10px 15px; border: none; border-radius: 8px; font-size: 14px; 
 <button onclick="exportData()" 
 style="background:#0f9b8e;color:white;margin-bottom:8px;">
 Export Backup
+</button>
+<input type="file" id="importFile" accept=".json" style="margin-bottom:8px;">
+<button onclick="importData()" style="background:#3498db;color:white;margin-bottom:8px;">
+Import Backup
 </button>
 
 <button onclick="resetMonth()" 
@@ -268,6 +303,19 @@ function exportData() {
     a.href = url;
     a.download = "tracker-backup.json";
     a.click();
+}
+
+function importData() {
+    let file = document.getElementById("importFile").files[0];
+    if(!file) return alert("Select a backup file first");
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        data = JSON.parse(e.target.result);
+        saveData();
+        updateUI();
+        alert("Backup restored successfully!");
+    };
+    reader.readAsText(file);
 }
 
 function updateUI() {
